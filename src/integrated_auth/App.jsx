@@ -7,6 +7,7 @@ import Todo from "./Todo";
 
 import axios from 'axios'
 import {API_BASE_URL} from './api-config'
+import NavBar from "./NavBar";
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
 
   return (
     <div className="App">
+      <NavBar/>
       <Container maxWidth="md">
         <AddTodo addItem={addItem}/>
         <Paper style={{margin:16}}>
