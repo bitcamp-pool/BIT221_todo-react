@@ -4,7 +4,10 @@ import axios from 'axios'
 import React from 'react'
 import { API_BASE_URL } from './api-config';
 
+import { useNavigate, Link } from 'react-router-dom'
+
 function SignIn() {
+  const navi = useNavigate();
 
   function signin(userDTO){
     axios({
@@ -12,7 +15,13 @@ function SignIn() {
       url: API_BASE_URL + "/auth/signin",
       data: userDTO
     }).then((response)=>{
-      alert(response.data.token);
+      // alert(response.data.token);
+      if (response.data.token){
+        // 로컬 스토리지에 저장
+        localStorage.setItem("ACCESS_TOKEN", response.data.token);
+        // 토큰이 존재하는 경우 TODO 화면으로 리디렉트
+        navi("/");
+      }
     });
   }
 
@@ -48,6 +57,7 @@ function SignIn() {
               name='username'
               label="아이디"
               autoComplete='username'
+              autoFocus
             />
           </Grid>
           <Grid item xs={12}>
@@ -67,6 +77,14 @@ function SignIn() {
               Signin
             </Button>
           </Grid>
+
+          <Grid item xs={12}>
+            <i className="fa-solid fa-bell" style={{color:'crimson', marginRight:'5px'}}></i>
+            <Link to="/signup" variant="body2" style={{textDecoration:'none', color:'steelblue'}}>
+              <span>Don't have an account? Sign up here</span>
+            </Link>
+          </Grid>
+
         </Grid>
       </form>
 

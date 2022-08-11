@@ -8,20 +8,28 @@ import Todo from "./Todo";
 import axios from 'axios'
 import {API_BASE_URL} from './api-config'
 import NavBar from "./NavBar";
-
+import { useNavigate } from 'react-router-dom'
 
 function App() {
   // Todo 목록리스트
   const [items, setItems] = useState([]);
+  const navi = useNavigate();
 
   // Todo 목록 가져오기(GET 요청)
   useEffect(()=>{
     axios({
       method:'get',
       url:API_BASE_URL + '/todo',
-    }).then((response)=>{
+      headers: {Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN")}
+    })
+    .then((response)=>{
       setItems(response.data.resList);
-    });
+    })
+    .catch((error)=>{
+      navi("/signin");
+      console.log(error);
+    })
+    ;
   }, []);
 
   // Todo 생성(POST 요청)
@@ -30,6 +38,7 @@ function App() {
       method:'post',
       url:API_BASE_URL + '/todo',
       data: item,
+      headers: {Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN")}
     }).then((response)=>{
       setItems(response.data.resList);
     });
@@ -40,7 +49,8 @@ function App() {
     axios({
       method:'put',
       url:API_BASE_URL + '/todo',
-      data:item
+      data:item,
+      headers: {Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN")}
     }).then((response)=>{
       setItems(response.data.resList);
     });
@@ -51,7 +61,8 @@ function App() {
     axios({
       method:'delete',
       url:API_BASE_URL + '/todo',
-      data:item
+      data:item,
+      headers: {Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN")}
     }).then(response=>setItems(response.data.resList));
   }
 
